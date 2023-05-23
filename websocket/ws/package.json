@@ -1,0 +1,24 @@
+{
+	"name": "ws",
+	"version": "0.0.1",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon app"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"cookie-parser": "^1.4.6",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"express-session": "^1.17.3",
+		"morgan": "^1.10.0",
+		"nunjucks": "^3.2.4",
+		"ws": "^8.13.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.22"
+	}
+}

@@ -1,0 +1,55 @@
+const Sequelize = require('sequelize');
+
+class User extends Sequelize.Model {
+    static initiate(sequelize) {
+        User.init({
+            email: {
+                type: Sequelize.STRING(40),
+                allowNull: true,
+                unique: true,
+            },
+            nick: {
+                type: Sequelize.STRING(15),
+                allowNull: false,
+            },
+            password: {
+                type: Sequelize.STRING(100),
+                allowNull: true,
+            },
+            provider: {
+                type: Sequelize.ENUM('local', 'kakao'),
+                allowNull: false,
+                defaultValue: 'local'
+            },
+            snsId: {
+                type: Sequelize.STRING(30),
+                allowNull: true
+            }
+        }, {
+            sequelize,
+            timestamps: true, // createAt, updatedAt 기록
+            underscored: false, // underscore 사용 안함
+            modelName: 'User',
+            tableName: 'users',
+            paranoid: true, // deletedAt <- 유저 삭제 시각
+            charset: 'utf8',
+            collate: 'utf8_general_ci',
+        });
+    }
+
+    static associate(db) {
+        db.User.hasMany(db.Post);
+        db.User.belongsToMany(db.User, {
+            through: 'Follow',
+            foreignKey: 'followingId',
+            as: 'Followers',
+        });
+        db.User.belongsToMany(db.User, {
+            through: 'Follow',
+            foreignKey: 'followerId',
+            as: 'Followings',
+        });
+    }
+}
+
+module.exports = User;

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIF 채팅방</title>
+</head>
+
+<body>
+  <div>F12를 눌러 console 탭과 network 탭을 확인하세요</div>
+  <script>
+    const webSocket = new WebSocket('ws://localhost:8005');
+    webSocket.onopen = () => {
+      console.log('서버와 웹 소켓 연결 성공');
+    };
+
+    // 수신
+    webSocket.onmessage = (event) => {
+      console.log(event.data);
+
+      // 발신
+      webSocket.send('클라이언트에서 서버로 답장을 보냅니다.');
+    };
+  </script>
+</body>
+
+</html>

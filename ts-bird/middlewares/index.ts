@@ -1,4 +1,6 @@
-const isLoggedIn = (req, res, next) => {
+import { RequestHandler } from 'express';
+
+const isLoggedIn: RequestHandler = (req, res, next) => {
 	if (req.isAuthenticated()) {
 		next();
 	} else {
@@ -6,7 +8,7 @@ const isLoggedIn = (req, res, next) => {
 	}
 };
 
-const isNotLoggedIn = (req, res, next) => {
+const isNotLoggedIn: RequestHandler = (req, res, next) => {
 	if (!req.isAuthenticated()) {
 		next();
 	} else {
@@ -15,7 +17,4 @@ const isNotLoggedIn = (req, res, next) => {
 	}
 };
 
-export default {
-	isLoggedIn,
-	isNotLoggedIn,
-};
+export { isLoggedIn, isNotLoggedIn };

@@ -1,28 +1,50 @@
-import Sequelize from 'sequelize';
+import Sequelize, {
+	Model,
+	CreationOptional,
+	InferAttributes,
+	InferCreationAttributes,
+	BelongsToManyGetAssociationsMixin,
+} from 'sequelize';
+import Post from './post';
+class Hashtag extends Model<InferAttributes<Hashtag>, InferCreationAttributes<Hashtag>> {
+	declare id: CreationOptional<number>; // Create할 때 있어도 되고 없어도 되고
+	declare title: string;
+	declare createdAt: CreationOptional<Date>;
+	declare updatedAt: CreationOptional<Date>;
 
-class Hashtag extends Sequelize.Model {
-    static initiate(sequelize) {
-        Hashtag.init({
-            title: {
-                type: Sequelize.STRING(15),
-                allowNull: false,
-                unique: true,
-            },
-        }, {
-            sequelize,
-            timestamps: true,
-            underscored: false,
-            modelName: 'Hashtag',
-            tableName: 'hashtags',
-            paranoid: false,
-            charset: 'utf8mb4',
-            collate: 'utf8mb4_general_ci'
-        });
-    }
+	declare getPosts: BelongsToManyGetAssociationsMixin<Post>;
 
-    static associate(db) {
-        db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
-    }
+	static initiate(sequelize: Sequelize.Sequelize) {
+		Hashtag.init(
+			{
+				id: {
+					type: Sequelize.INTEGER,
+					primaryKey: true,
+					autoIncrement: true,
+				},
+				title: {
+					type: Sequelize.STRING(15),
+					allowNull: false,
+					unique: true,
+				},
+				createdAt: Sequelize.DATE,
+				updatedAt: Sequelize.DATE,
+			},
+			{
+				sequelize,
+				timestamps: true,
+				underscored: false,
+				modelName: 'Hashtag',
+				tableName: 'hashtags',
+				paranoid: false,
+				charset: 'utf8mb4',
+				collate: 'utf8mb4_general_ci',
+			}
+		);
+	}
+	static associate() {
+		Hashtag.belongsToMany(Post, { through: 'PostHashtag' });
+	}
 }
 
 export default Hashtag;

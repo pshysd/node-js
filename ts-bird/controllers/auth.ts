@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
 import passport from 'passport';
-import { User } from '../models';
+import User from '../models/user';
+import { RequestHandler } from 'express';
 
-const join = async (req, res, next) => {
+const join: RequestHandler = async (req, res, next) => {
 	const { email, nick, password } = req.body;
 	try {
 		const exUser = await User.findOne({ where: { email } });
@@ -23,7 +24,7 @@ const join = async (req, res, next) => {
 	}
 };
 
-const login = (req, res, next) => {
+const login:RequestHandler = (req, res, next) => {
 	passport.authenticate('local', (authError, user, info) => {
 		if (authError) {
 			console.error(authError);
@@ -42,13 +43,13 @@ const login = (req, res, next) => {
 	})(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙여야 한다.
 };
 
-const logout = (req, res) => {
+const logout: RequestHandler = (req, res) => {
 	req.logout(() => {
 		res.redirect('/');
 	});
 };
 
-export default {
+export {
 	login,
 	logout,
 	join,

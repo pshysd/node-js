@@ -1,14 +1,14 @@
 import passport from 'passport';
 import local from './localStrategy';
 import kakao from './kakaoStrategy';
-import User from '../models';
+import User from '../models/user';
 
 export default () => {
 	passport.serializeUser((user, done) => {
 		done(null, user.id); // 세션에 user의 id만 저장
 	});
 
-	passport.deserializeUser((id, done) => {
+	passport.deserializeUser((id: number, done) => {
 		User.findOne({
 			where: { id },
 			include: [

@@ -7,6 +7,7 @@ import nunjucks from 'nunjucks';
 import dotenv from 'dotenv';
 import passport from 'passport';
 import { sequelize } from './models';
+import { ErrorRequestHandler } from 'express';
 
 dotenv.config(); // process.env 안에 설정들이 들어간다.
 
@@ -65,7 +66,7 @@ app.use((req, res, next) => {
 	next(error);
 });
 
-const errorHander = (err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 	res.locals.message = err.message;
 	res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
 	res.status(err.status || 500).render('error');

@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
-const { renderMain, renderJoin, renderGood, createGood } = require('../controllers');
+const { renderMain, renderJoin, renderGood, createGood, renderAuction, bid } = require('../controllers');
 
 const router = express.Router();
 
@@ -15,14 +15,13 @@ router.use((req, res, next) => {
 
 router.get('/', renderMain);
 
-router.get('/join', renderJoin);
+router.get('/join', isNotLoggedIn, renderJoin);
 
-router.get('/renderGood', renderGood);
+router.get('/good', isLoggedIn, renderGood);
 
 const uploadsFolderPath = path.join(__dirname, 'uploads');
 
 try {
-	// Check if 'uploads' folder already exists
 	if (!fs.existsSync(uploadsFolderPath)) {
 		fs.mkdirSync(uploadsFolderPath);
 		console.log('uploads 폴더가 생성되었습니다.');
@@ -48,5 +47,9 @@ const upload = multer({
 });
 
 router.post('/good', isLoggedIn, upload.single('img'), createGood);
+
+router.get('/good/:id', isLoggedIn, renderAuction);
+
+router.get('/good/:ib/bid', isLoggedIn, bid);
 
 module.exports = router;

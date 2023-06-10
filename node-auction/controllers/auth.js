@@ -33,7 +33,7 @@ exports.login = async (req, res, next) => {
 		}
 
 		if (!user) res.redirect(`/?loginError=${info.message}`);
-		
+
 		return req.login(user, (loginError) => {
 			if (loginError) {
 				console.error(loginError);

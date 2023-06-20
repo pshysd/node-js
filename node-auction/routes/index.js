@@ -52,4 +52,6 @@ router.get('/good/:id', isLoggedIn, renderAuction);
 
 router.get('/good/:ib/bid', isLoggedIn, bid);
 
+router.get('/list', isLoggedIn, renderList);
+
 module.exports = router;

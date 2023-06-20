@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
-const { Good } = require('../models/good');
-
+const { Good, Auction, User, sequelize } = require('../models');
+const schedule = require('node-schedule');
 exports.renderMain = async (req, res, next) => {
 	try {
 		const yesterday = new Date();
@@ -30,6 +30,32 @@ exports.renderGood = async (req, res, next) => {
 exports.createGood = async (req, res, next) => {
 	try {
 		const { name, price } = req.body;
+		const good = await Good.create({
+			OwnerId: req.user.id,
+			name,
+			img: req.file.filename,
+			price,
+		});
+
+		const end = new Date();
+		end.setDate(end.getDate() + 1); // 하루 뒤
+		const job = schedule.scheduleJob(end, async () => {
+			// 낙찰자
+			const success = await Auction.findOne({
+				where: { GoodId: good.id },
+				order: [['bid', 'DESC']], // 입찰가 내림차순으로 하면 맨 위에 가장 높은 한 사람이 올라올 것
+			});
+			await good.setSold(success.userId); // 낙찰
+			await User.update(
+				{// SET money = money - 10000000
+					money: sequelize.liter
+					,
+				},
+				{
+					where: { id: success.UserId },
+				}
+			);
+		}); // end 되는 시간에 실행할 함수를 만들어준다
 		await Good.create({
 			OwnerId: req.user.id,
 			name,

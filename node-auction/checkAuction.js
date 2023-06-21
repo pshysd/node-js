@@ -25,7 +25,7 @@ module.exports = async () => {
 			await good.setSold(success.UserId);
 			await User.update(
 				{
-					money: sequelize.literal(`money - ${good.bid}`),
+					money: sequelize.literal(`money - ${success.bid}`),
 				},
 				{
 					where: { id: success.UserId },
@@ -60,10 +60,12 @@ module.exports = async () => {
 					}
 				);
 			});
+			job.on('error', console.error);
+			job.on('success', () => {
+				console.log(`${good.id} 스케줄링 성공`);
+			});
 		});
-		job.on('error', console.error);
-		job.on('success', () => {
-			console.log(`${good.id} 스케줄링 성공`);
-		});
-	} catch (error) {}
+	} catch (error) {
+		console.error(error);
+	}
 };

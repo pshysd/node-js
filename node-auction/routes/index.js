@@ -4,10 +4,11 @@ const path = require('path');
 const fs = require('fs');
 
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
-const { renderMain, renderJoin, renderGood, createGood, renderAuction, bid } = require('../controllers');
+const { renderMain, renderJoin, renderGood, createGood, renderAuction, renderList, bid } = require('../controllers');
 
 const router = express.Router();
 
+// 모든 라우터들은 일단 여기를 거쳐감
 router.use((req, res, next) => {
 	res.locals.user = req.user;
 	next();
